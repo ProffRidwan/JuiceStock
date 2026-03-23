@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="JuiceStock.Api/JuiceStock.Api.csproj" />
+  <Project Path="JuiceStock.Application/JuiceStock.Application.csproj" />
+  <Project Path="JuiceStock.Domain.Tests/JuiceStock.Domain.Tests.csproj" Id="cce838b3-0d9e-4c02-a098-20b386185412" />
+  <Project Path="JuiceStock.Domain/JuiceStock.Domain.csproj" />
+  <Project Path="JuiceStock.Infrastructure/JuiceStock.Infrastructure.csproj" />
+</Solution>
