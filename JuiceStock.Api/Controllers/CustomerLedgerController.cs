@@ -1,6 +1,8 @@
-﻿using JuiceStock.Api.Contracts.Ledger;
+﻿using JuiceStock.Api.Contracts.Common;
+using JuiceStock.Api.Contracts.Ledger;
 using JuiceStock.Api.Mappings;
 using JuiceStock.Application.Customers;
+using JuiceStock.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JuiceStock.Api.Controllers;
@@ -41,18 +43,32 @@ public class CustomerLedgerController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetLedger(Guid customerId, [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetLedger(
+    Guid customerId,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] LedgerEntryType? type = null,
+    [FromQuery] DateTime? startDate = null,
+    [FromQuery] DateTime? endDate = null)
     {
-        var entries = _customerService.GetCustomerLedger(customerId);
+        var (entries, totalCount) = await _customerService
+            .GetCustomerLedgerPaged(
+                customerId,
+                page,
+                pageSize,
+                type,
+                startDate,
+                endDate);
 
-        var pagedEntries = entries
-        .OrderByDescending(e => e.EntryDate)
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .Select(e => e.ToResponse())
-        .ToList();
+        var response = new PagedResponse<LedgerEntryResponse>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+            Data = entries.Select(e => e.ToResponse()).ToList()
+        };
 
-        return Ok(pagedEntries);
+        return Ok(response);
     }
 }

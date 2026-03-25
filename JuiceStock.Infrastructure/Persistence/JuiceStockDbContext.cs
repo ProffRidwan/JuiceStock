@@ -20,6 +20,8 @@ namespace JuiceStock.Infrastructure.Persistence
                       .HasPrecision(18, 2); // ₦, $, accounting-safe
             });
         }
-        public DbSet<Customer> Customers => Set<Customer>();
+
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
     }
 }

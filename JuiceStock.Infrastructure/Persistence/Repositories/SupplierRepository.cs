@@ -1,26 +1,27 @@
 ﻿using JuiceStock.Application.Customers;
+using JuiceStock.Application.Suppliers;
 using JuiceStock.Domain.Entities;
 using JuiceStock.Infrastructure.Persistence;
 
 namespace JuiceStock.Infrastructure.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class SupplierRepository : ISupplierRepository
     {
         private readonly JuiceStockDbContext _context;
 
-        public CustomerRepository(JuiceStockDbContext context)
+        public SupplierRepository(JuiceStockDbContext context)
         {
             _context = context;
         }
 
-        public Customer GetById(Guid id)
+        public Supplier GetById(Guid id)
         {
-            return _context.Customers.Find(id);
+            return _context.Suppliers.Find(id);
         }
 
-        public void Add(Customer customer)
+        public void Add(Supplier supplier)
         {
-            _context.Customers.Add(customer);
+            _context.Suppliers.Add(supplier);
         }
 
         public void Save()
@@ -28,9 +29,9 @@ namespace JuiceStock.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public IQueryable<Customer> Query()
+        public IQueryable<Supplier> Query()
         {
-            return _context.Customers;
+            return _context.Suppliers;
         }
     }
 }

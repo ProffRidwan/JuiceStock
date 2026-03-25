@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace JuiceStock.Application.Customers
 {
@@ -10,5 +11,7 @@ namespace JuiceStock.Application.Customers
         Customer GetById(Guid id);
         void Add(Customer customer);
         void Save();
+        IQueryable<Customer> Query();
     }
+
 }

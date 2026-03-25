@@ -1,4 +1,6 @@
 ﻿using JuiceStock.Domain.Entities;
+using JuiceStock.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace JuiceStock.Application.Suppliers
 {
@@ -43,6 +45,49 @@ namespace JuiceStock.Application.Suppliers
         {
             var supplier = _repository.GetById(supplierId);
             return supplier.LedgerEntries;
+        }
+
+
+        public async Task<(List<LedgerEntry> Entries, int TotalCount)> GetSupplierLedgerPaged(
+    Guid supplierId,
+    int page,
+    int pageSize,
+    LedgerEntryType? type,
+    DateTime? startDate,
+    DateTime? endDate)
+        {
+            var query = _repository.Query()
+                .Where(s => s.Id == supplierId)
+                .SelectMany(s => s.LedgerEntries)
+                .AsQueryable();
+
+            // 🔹 Filter by type
+            if (type.HasValue)
+            {
+                query = query.Where(e => e.EntryType == type.Value);
+            }
+
+            // 🔹 Filter by start date
+            if (startDate.HasValue)
+            {
+                query = query.Where(e => e.EntryDate >= startDate.Value);
+            }
+
+            // 🔹 Filter by end date
+            if (endDate.HasValue)
+            {
+                query = query.Where(e => e.EntryDate <= endDate.Value);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var entries = await query
+                .OrderByDescending(e => e.EntryDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (entries, totalCount);
         }
     }
 }

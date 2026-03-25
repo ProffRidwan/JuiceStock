@@ -11,5 +11,6 @@ namespace JuiceStock.Application.Suppliers
         Supplier GetById(Guid id);
         void Add(Supplier supplier);
         void Save();
+        IQueryable<Supplier> Query();
     }
 }
