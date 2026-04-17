@@ -19,9 +19,17 @@ namespace JuiceStock.Infrastructure.Persistence
                 entity.Property(x => x.Amount)
                       .HasPrecision(18, 2); // ₦, $, accounting-safe
             });
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.Property(x => x.Price)
+                      .HasPrecision(18, 2);
+            });
         }
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
     }
 }

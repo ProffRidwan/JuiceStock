@@ -46,27 +46,23 @@ namespace JuiceStock.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetLedger(
     Guid supplierId,
-    [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 10,
-    [FromQuery] LedgerEntryType? type = null,
-    [FromQuery] DateTime? startDate = null,
-    [FromQuery] DateTime? endDate = null)
+        [FromQuery] GetLedgerRequest request)
         {
             var (entries, totalCount) = await _supplierService
                 .GetSupplierLedgerPaged(
                     supplierId,
-                    page,
-                    pageSize,
-                    type,
-                    startDate,
-                    endDate);
+                    request.Page,
+                request.PageSize,
+                request.Type,
+                request.StartDate,
+                request.EndDate);
 
             var response = new PagedResponse<LedgerEntryResponse>
             {
-                Page = page,
-                PageSize = pageSize,
+                Page = request.Page,
+                PageSize = request.PageSize,
                 TotalCount = totalCount,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+                TotalPages = (int)Math.Ceiling((double)totalCount / request.PageSize),
                 Data = entries.Select(e => e.ToResponse()).ToList()
             };
 
